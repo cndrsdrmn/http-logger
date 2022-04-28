@@ -1,0 +1,53 @@
+{
+    "name": "cndrsdrmn/http-logger",
+    "description": "Logging http request and response",
+    "keywords": [
+        "laravel",
+        "lumen",
+        "logging",
+        "http-logger"
+    ],
+    "homepage": "https://github.com/cndrsdrmn/http-logger",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Candra Sudirman",
+            "email": "o.candra18@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cndrsdrmn\\HttpLogger\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cndrsdrmn\\HttpLogger\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "php": "^7.4|^8.0|^8.1",
+        "illuminate/support": "^6.0|^7.0|^8.0|^9.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.8.0|^4.0|^5.0|^6.0|^7.0",
+        "phpunit/phpunit": "^8.0|^9.0"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html build"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cndrsdrmn\\HttpLogger\\HttpLoggerServiceProvider"
+            ]
+        }
+    }
+}
