@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/cndrsdrmn/http-logger.svg)](https://packagist.org/packages/cndrsdrmn/http-logger)
 [![Testing](https://github.com/cndrsdrmn/http-logger/actions/workflows/github-ci.yml/badge.svg)](https://github.com/cndrsdrmn/http-logger/actions/workflows/github-ci.yml)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
+[![GitHub](https://img.shields.io/github/license/cndrsdrmn/http-logger)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/cndrsdrmn/http-logger.svg)](https://packagist.org/packages/cndrsdrmn/http-logger)
 
 This package adds a middleware for writing a log of incoming requests and out-coming responses.
@@ -99,6 +99,13 @@ composer test
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
+## Contributing
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## Credits
+- [Candra Sudirman](https://github.com/cndrsdrmn)
+- [All Contributors](https://github.com/cndrsdrmn/http-logger/graphs/contributors)
+
 ## License
 
-MIT License. Please see [License File](LICENSE) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
