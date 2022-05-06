@@ -17,10 +17,28 @@ class HttpLoggerTest extends TestCase
 	protected $logger;
 	
 	/**
-	 * A test skipped IPs write log.
+	 * A test skipped endpoints write log.
 	 *
 	 * @return void
 	 */
+	public function test_skipped_endpoints_write_log()
+	{
+		$configs = array_merge($this->app->config->get('http-logger'), [
+			'skip_endpoints' => ['/foo/*'],
+		]);
+		
+		$start   = microtime(true);
+		$request = Request::create('foo/not-important', 'POST', ['foo' => 'bar']);
+		
+		$response = new Response();
+		$interval = microtime(true) - $start;
+		$logger   = new DefaultHttpLogger($configs);
+		
+		$logger->write($request, $response, $interval);
+		
+		$this->assertFileDoesNotExist($this->fileLogger());
+	}
+	
 	public function test_skipped_ips_write_log()
 	{
 		$configs = array_merge($this->app->config->get('http-logger'), [
