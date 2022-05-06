@@ -1,6 +1,17 @@
 # Change Log HTTP Logger
 
-## 1.0.0 - 2020-04-29
+## [1.1.0](https://github.com/cndrsdrmn/http-logger/compare/v1.0.0...v1.1.0) - 2022-05-06
+
+### Added
+- Added CONTRIBUTING.md ([7c0d477](https://github.com/cndrsdrmn/http-logger/commit/7c0d477c49aaa54e2722ae350ba2b3ea678c1574))
+- Skip IPs Address ([#5](https://github.com/cndrsdrmn/http-logger/pull/5))
+- Skip Endpoints ([#6](https://github.com/cndrsdrmn/http-logger/pull/6))
+
+### Changed
+- Update .gitattributes ([e4ad325](https://github.com/cndrsdrmn/http-logger/commit/e4ad32525868df94ab468cb79804bd1b72f8fe15))
+
+
+## [1.0.0](https://github.com/cndrsdrmn/http-logger/commits/v1.0.0) - 2022-04-29
 
 ### Added
 - Initial Release
