@@ -45,6 +45,16 @@ return [
 	    'password',
 	    'password_confirmation',
 	],
+	
+	/*
+	 |-----------------------------------------------------------
+	 | Skip IPs Address
+	 |-----------------------------------------------------------
+	 |
+	 | Sometimes, you need to skip recording a log for whitelist IPs address.
+	 | Example: '192.168.0.10', '172.10.0.*', '172.9.*',
+	 */
+	'skip_ips' => [],
 ];
 ```
 
