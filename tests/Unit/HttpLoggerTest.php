@@ -17,6 +17,31 @@ class HttpLoggerTest extends TestCase
 	protected $logger;
 	
 	/**
+	 * A test skipped IPs write log.
+	 *
+	 * @return void
+	 */
+	public function test_skipped_ips_write_log()
+	{
+		$configs = array_merge($this->app->config->get('http-logger'), [
+			'skip_ips' => ['192.168.*'],
+		]);
+		
+		$start   = microtime(true);
+		$request = Request::create('not-important', 'POST', ['foo' => 'bar'], [], [], [
+			'REMOTE_ADDR' => '192.168.1.1',
+		]);
+		
+		$response = new Response();
+		$interval = microtime(true) - $start;
+		$logger   = new DefaultHttpLogger($configs);
+		
+		$logger->write($request, $response, $interval);
+		
+		$this->assertFileDoesNotExist($this->fileLogger());
+	}
+	
+	/**
 	 * A test write log.
 	 *
 	 * @return void
