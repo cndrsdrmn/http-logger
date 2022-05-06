@@ -78,7 +78,7 @@ class DefaultHttpLogger implements HttpLoggable
 	 */
 	protected function ensureSkipped($request): bool
 	{
-		return $this->skippedByIp($request->ip());
+		return $this->skippedByIp($request->ip()) || $this->skippedByEndpoint($request->getPathInfo());
 	}
 	
 	/**
@@ -157,6 +157,25 @@ class DefaultHttpLogger implements HttpLoggable
 		}
 		
 		return $response;
+	}
+	
+	/**
+	 * Skipped by endpoint.
+	 *
+	 * @param  string $value
+	 * @return bool
+	 */
+	protected function skippedByEndpoint(string $value): bool
+	{
+		return collect($this->config['skip_endpoints'])
+			->filter(function ($path) use ($value) {
+				if (Str::contains($path, '*')) {
+					return Str::startsWith($value, str_replace('*', '', $path));
+				}
+				
+				return $path === $value;
+			})
+			->isNotEmpty();
 	}
 	
 	/**
