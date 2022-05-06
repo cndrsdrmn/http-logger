@@ -63,9 +63,22 @@ class DefaultHttpLogger implements HttpLoggable
 	 */
 	public function write($request, $response, float $interval): void
 	{
-		$message = $this->formatter($request, $response, $interval);
-		
-		$this->logger->log($this->forLevel($response), $message);
+		if (! $this->ensureSkipped($request)) {
+			$message = $this->formatter($request, $response, $interval);
+			
+			$this->logger->log($this->forLevel($response), $message);
+		}
+	}
+	
+	/**
+	 * Make sure a request needs to skip.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @return bool
+	 */
+	protected function ensureSkipped($request): bool
+	{
+		return $this->skippedByIp($request->ip());
 	}
 	
 	/**
@@ -144,5 +157,24 @@ class DefaultHttpLogger implements HttpLoggable
 		}
 		
 		return $response;
+	}
+	
+	/**
+	 * Skipped by IP address.
+	 *
+	 * @param  string $value
+	 * @return bool
+	 */
+	protected function skippedByIp(string $value): bool
+	{
+		return collect($this->config['skip_ips'])
+			->filter(function ($ip) use ($value) {
+				if (Str::contains($ip, '*')) {
+					return Str::startsWith($value, trim(str_replace('*', '', $ip), '.'));
+				}
+				
+				return $ip === $value;
+			})
+			->isNotEmpty();
 	}
 }
