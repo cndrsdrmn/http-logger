@@ -52,7 +52,7 @@ class HttpLoggerServiceProvider extends ServiceProvider
 			if ($this->app instanceof LaravelApplication) {
 				$this->publishes([$this->configPath() => config_path('http-logger.php')], 'config');
 			} else if ($this->app instanceof LumenApplication) {
-				$this->app->configure('sluggable');
+				$this->app->configure('http-logger');
 			}
 		}
 	}

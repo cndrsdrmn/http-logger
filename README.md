@@ -91,7 +91,15 @@ By default, we use the `stack` channel for handling this. You can override with 
 HTTP_LOGGER_CHANNEL=http-logger
 ```
 
+For lumen your need enable `withFacades` at `bootstrap/app.php`.
+
+```php
+$app->withFacades();
+```
+
 ## Usage
+
+### 1. Laravel
 
 This package provides a middleware that can be added as a global middleware or as a single route.\
 Please see [official documentation](https://laravel.com/docs/9.x/middleware#registering-middleware) for more information.
@@ -107,6 +115,36 @@ protected $middleware = [
 Route::post('foo', function () {
     // action here
 })->middleware(\Cndrsdrmn\HttpLogger\Middleware\HttpLogger::class);
+```
+
+### 2. Lumen
+
+This package provides a middleware that can be added as a global middleware or as a single route.\
+Please see [official documentation](https://lumen.laravel.com/docs/9.x/middleware#registering-middleware) for more information.
+
+```php
+// in bootstrap/app.php
+
+// Global Middleware
+$app->middleware([
+   \Cndrsdrmn\HttpLogger\Middleware\HttpLogger::class,
+]);
+
+// OR Assigning Middleware To Routes
+$app->routeMiddleware([
+    'http-logger' => \Cndrsdrmn\HttpLogger\Middleware\HttpLogger::class,
+]);
+
+// in routes file
+$router->get('/', ['middleware' => ['http-logger'], function () {
+    //
+}]);
+```
+
+Create/copy a configuration file from [here](config/http-logger.php) into `config/http-logger.php` then registering a configuration at `bootstrap/app.php`.
+
+```php
+$app->configure('http-logger');
 ```
 
 ## Testing
