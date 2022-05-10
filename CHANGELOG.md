@@ -1,5 +1,14 @@
 # Change Log HTTP Logger
 
+## [1.1.1](https://github.com/cndrsdrmn/http-logger/compare/v1.1.0...v1.1.1) - 2022-05-10
+
+### Added
+- Added Lumen Documentation ([#7](https://github.com/cndrsdrmn/http-logger/pull/7))
+
+### Changed
+- Optimize unit test ([#8](https://github.com/cndrsdrmn/http-logger/pull/8))
+
+
 ## [1.1.0](https://github.com/cndrsdrmn/http-logger/compare/v1.0.0...v1.1.0) - 2022-05-06
 
 ### Added
