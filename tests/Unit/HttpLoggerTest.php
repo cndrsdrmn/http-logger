@@ -6,6 +6,7 @@ use Cndrsdrmn\HttpLogger\DefaultHttpLogger;
 use Cndrsdrmn\HttpLogger\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class HttpLoggerTest extends TestCase
 {
@@ -48,9 +49,21 @@ class HttpLoggerTest extends TestCase
 	 */
 	public function test_write_log()
 	{
-		$this->write(Request::create('not-important', 'POST', ['foo' => 'bar']));
+		$configs = ['masking' => ['foo', 'secret-key', 'access-token']];
+		$masking = str_pad('', strlen('') - mb_strlen('') + 64, '*', STR_PAD_RIGHT);
 		
-		$this->assertStringContainsString('"foo":"bar"', $this->readFileLogger());
+		$request = Request::create('not-important', 'POST', [
+			'foo' => 'bar',
+		], [], [], [
+			'HTTP_SECRET_KEY' => Str::random(64),
+		]);
+		$request->query->set('access-token', Str::random(64));
+		
+		$this->write($request, null, $configs);
+		
+		$this->assertStringContainsString(str_replace('?', $masking, '"secret-key":["?"]'), $this->readFileLogger());
+		$this->assertStringContainsString(str_replace('?', $masking, '"access-token":"?"'), $this->readFileLogger());
+		$this->assertStringContainsString(str_replace('?', '***', '"foo":"?"'), $this->readFileLogger());
 	}
 	
 	/**
