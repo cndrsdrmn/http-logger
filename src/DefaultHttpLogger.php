@@ -78,7 +78,7 @@ class DefaultHttpLogger implements HttpLoggable
 	 */
 	protected function ensureSkipped($request): bool
 	{
-		return $this->skippedByIp($request->ip()) || $this->skippedByEndpoint($request->getPathInfo());
+		return $this->skippedBy('skip_ips', $request->ip()) || $this->skippedBy('skip_endpoints', $request->getPathInfo());
 	}
 	
 	/**
@@ -205,40 +205,20 @@ class DefaultHttpLogger implements HttpLoggable
 	}
 	
 	/**
-	 * Skipped by endpoint.
+	 * Skipped by configurations.
 	 *
+	 * @param  string $config
 	 * @param  string $value
+	 * @param  string $trimChars
 	 * @return bool
 	 */
-	protected function skippedByEndpoint(string $value): bool
+	protected function skippedBy(string $config, string $value, string $trimChars = " \t\n\r\0\x0B"): bool
 	{
-		return collect($this->config['skip_endpoints'])
-			->filter(function ($path) use ($value) {
-				if (Str::contains($path, '*')) {
-					return Str::startsWith($value, str_replace('*', '', $path));
-				}
-				
-				return $path === $value;
-			})
-			->isNotEmpty();
-	}
-	
-	/**
-	 * Skipped by IP address.
-	 *
-	 * @param  string $value
-	 * @return bool
-	 */
-	protected function skippedByIp(string $value): bool
-	{
-		return collect($this->config['skip_ips'])
-			->filter(function ($ip) use ($value) {
-				if (Str::contains($ip, '*')) {
-					return Str::startsWith($value, trim(str_replace('*', '', $ip), '.'));
-				}
-				
-				return $ip === $value;
-			})
+		return collect($this->config[$config] ?? [])
+			->filter(fn ($skipped) => Str::contains($skipped, '*')
+				? Str::startsWith($value, trim(str_replace('*', '', $skipped), $trimChars))
+				: $skipped === $value
+			)
 			->isNotEmpty();
 	}
 }
