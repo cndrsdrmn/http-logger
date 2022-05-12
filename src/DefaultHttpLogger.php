@@ -114,8 +114,6 @@ class DefaultHttpLogger implements HttpLoggable
 			->map([$this, 'mapFiles'])
 			->all();
 		
-		$masking = array_map(fn ($value) => Str::mask($value, '*', 0), $request->only($this->config['masking']));
-		
 		return json_encode([
 			'INTERVAL' => $this->intervalForHumans($interval),
 			'BASE_URI' => $request->getSchemeAndHttpHost(),
@@ -124,10 +122,10 @@ class DefaultHttpLogger implements HttpLoggable
 			'METHOD' => $request->getMethod(),
 			'STATUS_CODE' => $statusCode = $response->getStatusCode(),
 			'STATUS_TEXT' => Response::$statusTexts[$statusCode] ?? '',
-			'REQUEST' => array_merge($request->request->all(), $masking),
+			'REQUEST' => $this->masking($request->request->all()),
 			'REQUEST_FILES' => $files,
-			'REQUEST_HEADERS' => $request->headers->all(),
-			'REQUEST_QUERY' => $request->query->all(),
+			'REQUEST_HEADERS' => $this->masking($request->headers->all()),
+			'REQUEST_QUERY' => $this->masking($request->query->all()),
 			'RESPONSE' => $this->resolver($response),
 			'RESPONSE_HEADERS' => $response->headers->all(),
 		]);
@@ -142,6 +140,53 @@ class DefaultHttpLogger implements HttpLoggable
 	protected function intervalForHumans(float $interval): string
 	{
 		return Carbon::now()->addSeconds($interval)->diffForHumans(['syntax' => CarbonInterface::DIFF_ABSOLUTE]);
+	}
+	
+	/**
+	 * Masks a portion of a string with a repeated character.
+	 *
+	 * @param  string   $string
+	 * @param  string   $character
+	 * @param  int      $index
+	 * @param  int|null $length
+	 * @param  string   $encoding
+	 * @return string
+	 */
+	protected function mask($string, $character, $index, $length = null, $encoding = 'UTF-8'): string
+	{
+		if ($character === '') {
+			return $string;
+		}
+		
+		$segment = mb_substr($string, $index, $length, $encoding);
+		
+		if ($segment === '') {
+			return $string;
+		}
+		
+		$start = mb_substr($string, 0, mb_strpos($string, $segment, 0, $encoding), $encoding);
+		$end   = mb_substr($string, mb_strpos($string, $segment, 0, $encoding) + mb_strlen($segment, $encoding));
+		
+		return $start . str_repeat(mb_substr($character, 0, 1, $encoding), mb_strlen($segment, $encoding)) . $end;
+	}
+	
+	/**
+	 * Masking request parameters.
+	 *
+	 * @param  array $parameters
+	 * @return array
+	 */
+	protected function masking(array $parameters): array
+	{
+		foreach ($parameters as $key => $value) {
+			if (in_array($key, $this->config['masking'])) {
+				$parameters[$key] = is_array($value)
+					? array_map(fn ($value) => $this->mask($value, '*', 0), $value)
+					: $this->mask($value, '*', 0);
+			}
+		}
+		
+		return $parameters;
 	}
 	
 	/**

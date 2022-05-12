@@ -16,6 +16,7 @@ return [
 	 |
 	 | Sometimes you need to keep field values secretly.
 	 | You can register a field on this "masking" key to keep its value secret.
+	 | Masked a request "body", "query" and "headers".
 	 */
 	'masking' => [
 		'password',
