@@ -1,5 +1,11 @@
 # Change Log HTTP Logger
 
+## [1.2.0](https://github.com/cndrsdrmn/http-logger/compare/v1.1.1...v1.2.0) - 2022-05-16
+
+### Fixed
+- Masking Request ([#9](https://github.com/cndrsdrmn/http-logger/pull/9))
+
+
 ## [1.1.1](https://github.com/cndrsdrmn/http-logger/compare/v1.1.0...v1.1.1) - 2022-05-10
 
 ### Added
